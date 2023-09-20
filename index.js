@@ -28,9 +28,22 @@ const getDifficulty = () => {
 const getSurroudingTiles = (tile, board) => {
   // ? ? ?
   // ? x ?
-  // ? ? ?
-  let tiles = [[UNKNOWN, UNKNOWN, UNKNOWN], [UNKNOWN, UNKNOWN, UNKNOWN], [UNKNOWN, UNKNOWN, UNKNOWN]]
+  // ? ? ?  
+  // tile = [x,y]
+  let tileval = board[x][y];
+  let tiles = [[UNKNOWN, UNKNOWN, UNKNOWN], [UNKNOWN, tileval, UNKNOWN], [UNKNOWN, UNKNOWN, UNKNOWN]]
+  
+  tiles[1][1] = board[x-1][y-1]
+  tiles[2][1] = board[x][y-1]
+  tiles[3][1] = board[x+1][y-1]
+  tiles[1][2] = board[x-1][y]
+  // tiles[2][2] is tile
+  tiles[3][2] = board[x+1][y]
+  tiles[1][3] = board[x-1][y+1]
+  tiles[2][3] = board[x][y+1]
+  tiles[3][3] = board[x+1][y+1]
 
+  return tiles;
 }
 
 // Variables
