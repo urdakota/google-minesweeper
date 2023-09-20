@@ -25,6 +25,13 @@ const getDifficulty = () => {
   }
   return -1;
 }
+const getSurroudingTiles = (tile, board) => {
+  // ? ? ?
+  // ? x ?
+  // ? ? ?
+  let tiles = [[UNKNOWN, UNKNOWN, UNKNOWN], [UNKNOWN, UNKNOWN, UNKNOWN], [UNKNOWN, UNKNOWN, UNKNOWN]]
+
+}
 
 // Variables
 
@@ -40,8 +47,8 @@ await (async () => {
 
   let board = [];
   for (let x = 0; x < xTiles; x++) {
-    this.board[x] = [];
-    for (let y = 0; y < yTiles; y++) this.board[x][y] = UNKNOWN;
+    board[x] = [];
+    for (let y = 0; y < yTiles; y++) board[x][y] = UNKNOWN;
   }
 
   console.log(board);
