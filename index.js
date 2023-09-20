@@ -41,9 +41,11 @@ const getSurroudingTiles = (tile, board) => {
   tiles[1][2] = board[x-1][y]
   // tiles[2][2] is tile
   tiles[3][2] = board[x+1][y]
-  tiles[1][3] = board[x-1][y+1]
-  tiles[2][3] = board[x][y+1]
-  tiles[3][3] = board[x+1][y+1]
+  if(tile[1] < board[1].length-1){
+    if (tile[0] > 0) tiles[1][3] = board[x-1][y+1]
+    tiles[2][3] = board[x][y+1]
+    if (tile[0] < board[0].length-1) tiles[3][3] = board[x+1][y+1]
+  }
 
   return tiles;
 }
