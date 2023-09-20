@@ -1,7 +1,4 @@
 // Not done
-(function () {
-
-const select = (_, el=document) => el.querySelector(_);
 
 class FakeMouseEvent extends MouseEvent {
   constructor(type, values) {
@@ -13,6 +10,49 @@ class FakeMouseEvent extends MouseEvent {
   get offsetX() { return this._offsetX ?? super.offsetX; }
   get offsetY() { return this._offsetY ?? super.offsetY; }
 }
+
+// I LOVE POINTERS!!! 
+const log    = (...msg) => console.log(msg);
+const select = (_, el=document) => el.querySelector(_);
+const wait   = (t) => new Promise(_ => setTimeout(_, t*1000));
+
+// Gamefuncs
+const isGameOver = () => select('h2', canvas.parentNode).parentNode.parentNode.parentNode.style.visibility != 'hidden';
+const getDifficulty = () => { 
+  let menu = select('g-menu', select('g-popup', select('canvas').parentNode));
+  for (let i = 0; i < 3; i++) {
+    if (menu.children[i].getAttribute('aria-checked') == 'true') return i;
+  }
+  return -1;
+}
+
+// Variables
+
+const UNKNOWN = -2, FLAG = -1;
+  // X-tiles, Y-tiles, Mines
+const gameData = [[10, 8, 10], [18, 14, 40], [24, 20, 99]];
+
+await (async () => {
+  let canvas  = select("canvas");
+  let context =  canvas.getContext('2d', {willReadFrequently: true});
+  let [xTiles, yTiles, mines] = gameData[getDifficulty()];
+  let size = canvas.width / xTiles;
+
+  let board = [];
+  for (let x = 0; x < xTiles; x++) {
+    this.board[x] = [];
+    for (let y = 0; y < yTiles; y++) this.board[x][y] = UNKNOWN;
+  }
+
+  console.log(board);
+
+})()
+
+
+
+
+
+
 
 function choose(n, k) {
   const res = [];
@@ -43,11 +83,6 @@ function getDifficultyIndex() {
   return -1;
 }
 
-function gameOver() {
-  let playAgain = select('h2', select('canvas').parentNode);
-  let popup = playAgain.parentNode.parentNode.parentNode;
-  return popup.style.visibility != 'hidden';
-}
 
 const UNKNOWN = -2, FLAG = -1;
 
