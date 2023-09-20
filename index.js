@@ -32,16 +32,18 @@ const getSurroudingTiles = (tile, board) => {
   // tile = [x,y]
   let tileval = board[x][y];
   let tiles = [[UNKNOWN, UNKNOWN, UNKNOWN], [UNKNOWN, tileval, UNKNOWN], [UNKNOWN, UNKNOWN, UNKNOWN]]
-  
-  if(tile[1] > 0){
+
+  if(tile[1] > 0){ // if y is below top of board
     if (tile[0] > 0) tiles[1][1] = board[x-1][y-1]
     tiles[2][1] = board[x][y-1]
     if (tile[0] < board[0].length-1) tiles[3][1] = board[x+1][y-1]
   }
-  tiles[1][2] = board[x-1][y]
+
+  if (tile[0] > 0) tiles[1][2] = board[x-1][y]
   // tiles[2][2] is tile
-  tiles[3][2] = board[x+1][y]
-  if(tile[1] < board[1].length-1){
+  if (tile[0] < board[0].length-1) tiles[3][2] = board[x+1][y]
+
+  if(tile[1] < board[1].length-1){ // if y is above bottom of board
     if (tile[0] > 0) tiles[1][3] = board[x-1][y+1]
     tiles[2][3] = board[x][y+1]
     if (tile[0] < board[0].length-1) tiles[3][3] = board[x+1][y+1]
@@ -53,6 +55,22 @@ const getSurroudingTiles = (tile, board) => {
 // Variables
 
 const UNKNOWN = -2, FLAG = -1;
+const COLOR_MAP = {
+  '#aad751': UNKNOWN,
+  '#a2d149': UNKNOWN,
+  '#f23607': FLAG,
+  '#e63307': FLAG,
+  '#e5c29f': 0,
+  '#d7b899': 0,
+  '#1976d2': 1,
+  '#388e3c': 2,
+  '#d32f2f': 3,
+  '#7b1fa2': 4,
+  '#ff8f00': 5,
+  '#0097a7': 6,
+  '#424242': 7,
+}
+
   // X-tiles, Y-tiles, Mines
 const gameData = [[10, 8, 10], [18, 14, 40], [24, 20, 99]];
 
@@ -66,6 +84,28 @@ await (async () => {
   for (let x = 0; x < xTiles; x++) {
     board[x] = [];
     for (let y = 0; y < yTiles; y++) board[x][y] = UNKNOWN;
+  }
+
+  function getTile(x,y) { // all from jwseph 
+    if (board[x][y] == FLAG || board[x][y] > 0) return board[x][y];
+    let relativePositions = [
+      [.6, .4], [.5, .5], [.6, .6], [.5, .58], [.5, .3],
+      [.45, .45], [.4, .6], [.5, .4],
+    ]
+    let pixelData = [];
+    for (const [dx, dy] of relativePositions) {
+      pixelData.push(context.getImageData((x+dx)*size, (y+dy)*size, 1, 1).data);
+    }
+    let hexColors = [];
+    for (let i = 0; i < pixelData.length; i++) {
+      let [r, g, b] = pixelData[i];
+      hexColors[i] = '#'+((r<<16)+(g<<8)+b).toString(16).padStart(6, '0');
+    }
+    for (const hexColor of hexColors) {
+      if (!(hexColor in COLOR_MAP)) continue;
+      board[x][y] = Math.max(board[x][y], COLOR_MAP[hexColor]);
+    }
+    return board[x][y];
   }
 
   console.log(board);
